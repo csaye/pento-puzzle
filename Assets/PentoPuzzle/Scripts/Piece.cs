@@ -4,10 +4,18 @@ namespace PentoPuzzle
 {
     public class Piece : MonoBehaviour
     {
+        [Header("Attributes")]
+        [SerializeField] private Vector2Int[] tiles = null;
+
         private Camera mainCamera;
 
         private bool offsetSet = false;
         private Vector2 mouseOffset;
+
+        public Vector2Int[] Tiles
+        {
+            get { return tiles; }
+        }
 
         private void Start()
         {
