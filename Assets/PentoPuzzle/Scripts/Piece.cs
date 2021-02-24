@@ -4,11 +4,16 @@ namespace PentoPuzzle
 {
     public class Piece : MonoBehaviour
     {
-        [Header("References")]
-        [SerializeField] private Camera mainCamera = null;
+        private Camera mainCamera;
+
+        private void Start()
+        {
+            // Cache main camera reference
+            mainCamera = Camera.main;
+        }
 
         // Move to mouse position on drag
-        public void OnMouseDrag()
+        private void OnMouseDrag()
         {
             Vector2 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             // Round mouse position to snap to grid
