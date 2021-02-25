@@ -21,7 +21,7 @@ namespace PentoPuzzle
 
         private void Start()
         {
-            GeneratePieces();
+            // GeneratePieces();
         }
 
         // Generates an initial piece layout
@@ -75,9 +75,9 @@ namespace PentoPuzzle
         }
 
         // Returns whether piece with given tiles can be moved to given position
-        public bool MovePiece(Vector2Int startPosition, Vector2Int position, Vector2Int[] tiles)
+        public bool MovePiece(Vector2Int startPosition, Vector2Int[] startTiles, Vector2Int position, Vector2Int[] tiles)
         {
-            foreach (Vector2Int tile in tiles)
+            foreach (Vector2Int tile in startTiles)
             {
                 // Clear start position
                 Vector2Int startPos = startPosition + tile;
@@ -87,7 +87,7 @@ namespace PentoPuzzle
             // If not valid piece position, reset start position and return false
             if (!ValidPiecePosition(position, tiles))
             {
-                foreach (Vector2Int tile in tiles)
+                foreach (Vector2Int tile in startTiles)
                 {
                     // Reset start position
                     Vector2Int startPos = startPosition + tile;
