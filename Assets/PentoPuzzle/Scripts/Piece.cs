@@ -11,11 +11,7 @@ namespace PentoPuzzle
 
         private bool offsetSet = false;
         private Vector2 mouseOffset;
-
-        public Vector2Int[] Tiles
-        {
-            get { return tiles; }
-        }
+        private Vector2Int startPosition;
 
         private void Start()
         {
@@ -32,6 +28,7 @@ namespace PentoPuzzle
             {
                 offsetSet = true;
                 mouseOffset = (Vector2)transform.position - mousePosition;
+                startPosition = Operation.RoundToInt(transform.position);
             }
             // Round mouse position to snap to grid
             float x = Mathf.Round(mousePosition.x + mouseOffset.x);
@@ -44,6 +41,10 @@ namespace PentoPuzzle
         {
             // Reset mouse offset on mouse up
             offsetSet = false;
+
+            // If cannot move piece, move back to start position
+            Vector2Int position = Operation.RoundToInt(transform.position);
+            if (!PieceManager.instance.MovePiece(startPosition, position, tiles)) transform.position = (Vector2)startPosition;
         }
     }
 }
