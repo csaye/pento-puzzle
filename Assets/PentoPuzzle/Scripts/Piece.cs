@@ -5,7 +5,7 @@ namespace PentoPuzzle
     public class Piece : MonoBehaviour
     {
         [Header("Attributes")]
-        // [SerializeField] private Vector2Int size = new Vector2Int();
+        [SerializeField] private Vector2Int size = new Vector2Int();
         [SerializeField] private Vector2Int[] tiles = null;
 
         public Vector2Int[] Tiles
@@ -25,6 +25,18 @@ namespace PentoPuzzle
             }
         }
 
+        private bool _flip = false;
+        private bool flip
+        {
+            get { return _flip; }
+            set
+            {
+                _flip = value;
+                int xScale = flip ? -1 : 1;
+                transform.localScale = new Vector3(xScale, 1, 1);
+            }
+        }
+
         private Camera mainCamera;
 
         private bool offsetSet = false;
@@ -32,6 +44,7 @@ namespace PentoPuzzle
         private Vector2Int[] startTiles = null;
         private Vector2Int startPosition;
         private int startRotation;
+        private bool startFlip;
 
         private void Start()
         {
@@ -50,10 +63,12 @@ namespace PentoPuzzle
                 mouseOffset = (Vector2)transform.position - mousePosition;
                 startTiles = tiles;
                 startRotation = rotation;
+                startFlip = flip;
                 startPosition = Operation.RoundToInt(transform.position);
             }
-            // Rotate
+            // Rotate and flip
             if (Input.GetKeyDown(KeyCode.R)) rotation += 1;
+            if (Input.GetKeyDown(KeyCode.F)) flip = !flip;
             // Round mouse position to snap to grid
             float x = Mathf.Round(mousePosition.x + mouseOffset.x);
             float y = Mathf.Round(mousePosition.y + mouseOffset.y);
@@ -72,8 +87,10 @@ namespace PentoPuzzle
             {
                 // Reset position and tiles
                 transform.position = (Vector2)startPosition;
-                rotation = startRotation;
                 tiles = startTiles;
+                // Reset rotation and flip
+                rotation = startRotation;
+                flip = startFlip;
             }
         }
     }
