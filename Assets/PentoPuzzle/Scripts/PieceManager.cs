@@ -19,8 +19,39 @@ namespace PentoPuzzle
             instance = this;
         }
 
-        // Returns whether piece with given tiles can be moved to given position
-        public bool MovePiece(Vector2Int startPosition, Vector2Int position, Vector2Int[] tiles)
+        private void Start()
+        {
+            GeneratePieces();
+        }
+
+        // Generates an initial piece layout
+        private void GeneratePieces()
+        {
+            for (int x = 0; x < boardWidth; x++)
+            {
+                for (int y = 0; y < boardHeight; y++)
+                {
+                    GameObject piece = pieces[Random.Range(0, pieces.Length)];
+                    Vector2Int[] tiles = piece.GetComponent<Piece>().Tiles;
+                    Vector2Int position = new Vector2Int(x, y);
+                    // If valid piece position
+                    if (ValidPiecePosition(position, tiles))
+                    {
+                        // Instantiate piece
+                        Instantiate(piece, (Vector2)position, Quaternion.identity, transform);
+                        // Update board
+                        foreach (Vector2Int tile in tiles)
+                        {
+                            Vector2Int pos = position + tile;
+                            board[pos.x, pos.y] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Returns whether piece with given tiles is valid at given position
+        private bool ValidPiecePosition(Vector2Int position, Vector2Int[] tiles)
         {
             // If any position out of bounds, return false
             foreach (Vector2Int tile in tiles)
@@ -39,12 +70,35 @@ namespace PentoPuzzle
                 if (board[pos.x, pos.y]) return false;
             }
 
-            // If all board positions empty, update board
+            // If valid, return true
+            return true;
+        }
+
+        // Returns whether piece with given tiles can be moved to given position
+        public bool MovePiece(Vector2Int startPosition, Vector2Int position, Vector2Int[] tiles)
+        {
             foreach (Vector2Int tile in tiles)
             {
                 // Clear start position
                 Vector2Int startPos = startPosition + tile;
                 board[startPos.x, startPos.y] = false;
+            }
+
+            // If not valid piece position, reset start position and return false
+            if (!ValidPiecePosition(position, tiles))
+            {
+                foreach (Vector2Int tile in tiles)
+                {
+                    // Reset start position
+                    Vector2Int startPos = startPosition + tile;
+                    board[startPos.x, startPos.y] = true;
+                }
+
+                return false;
+            }
+
+            foreach (Vector2Int tile in tiles)
+            {
                 // Populate new position
                 Vector2Int pos = position + tile;
                 board[pos.x, pos.y] = true;

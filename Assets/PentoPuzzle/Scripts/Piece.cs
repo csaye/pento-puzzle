@@ -7,6 +7,11 @@ namespace PentoPuzzle
         [Header("Attributes")]
         [SerializeField] private Vector2Int[] tiles = null;
 
+        public Vector2Int[] Tiles
+        {
+            get { return tiles; }
+        }
+
         private Camera mainCamera;
 
         private bool offsetSet = false;
