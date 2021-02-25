@@ -5,6 +5,7 @@ namespace PentoPuzzle
     public class Piece : MonoBehaviour
     {
         [Header("Attributes")]
+        [SerializeField] private Vector2Int size = new Vector2Int();
         [SerializeField] private Vector2 pivot = new Vector2();
         [SerializeField] private Vector2Int[] tiles = null;
 
@@ -19,7 +20,7 @@ namespace PentoPuzzle
             get { return _rotation; }
             set
             {
-                if (value < 0 || value >= 4) _rotation = 0;
+                if (value < 0) _rotation = 3;
                 else _rotation = value;
                 // Rotate
                 int zRot = 90 * rotation;
@@ -39,11 +40,11 @@ namespace PentoPuzzle
                 int xScale = flip ? -1 : 1;
                 transform.localScale = new Vector3(xScale, 1, 1);
                 // Flip tiles
-                // for (int i = 0; i < tiles.Length; i++)
-                // {
-                //     Vector2Int tile = tiles[i];
-                //     tiles[i] = 
-                // }
+                for (int i = 0; i < tiles.Length; i++)
+                {
+                    Vector2Int tile = tiles[i];
+                    tiles[i] = new Vector2Int(size.x - tile.x - 1, tile.y);
+                }
             }
         }
 
@@ -76,14 +77,14 @@ namespace PentoPuzzle
             {
                 offsetSet = true;
                 mouseOffset = (Vector2)transform.position - mousePosition;
-                startTiles = tiles;
+                startTiles = (Vector2Int[])tiles.Clone();
                 startPosition = transform.position;
                 // Set start rotation and flip
                 startRotation = rotation;
                 startFlip = flip;
             }
             // Rotate and flip
-            if (Input.GetKeyDown(KeyCode.R)) rotation += 1;
+            if (Input.GetKeyDown(KeyCode.R)) rotation -= 1;
             if (Input.GetKeyDown(KeyCode.F)) flip = !flip;
             // Round mouse position to snap to grid
             float xRaw = mousePosition.x + mouseOffset.x;
@@ -108,7 +109,7 @@ namespace PentoPuzzle
                 transform.position = startPosition;
                 tiles = startTiles;
                 // Reset rotation and flip
-                // rotation = startRotation;
+                rotation = startRotation;
                 flip = startFlip;
             }
         }
