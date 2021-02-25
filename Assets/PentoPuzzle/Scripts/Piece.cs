@@ -31,9 +31,18 @@ namespace PentoPuzzle
             get { return _flip; }
             set
             {
-                _flip = value;
+                if (_flip == value) return;
+                else _flip = value;
+                // Flip scale
                 int xScale = flip ? -1 : 1;
                 transform.localScale = new Vector3(xScale, 1, 1);
+                // Flip tiles
+                for (int i = 0; i < tiles.Length; i++)
+                {
+                    Vector2Int tile = tiles[i];
+                    tiles[i] = new Vector2Int(tile.x * -1, tile.y);
+                }
+                pieceOffset = flip ? new Vector2Int(-size.x + 1, 0) : Vector2Int.zero;
             }
         }
 
@@ -41,8 +50,11 @@ namespace PentoPuzzle
 
         private bool offsetSet = false;
         private Vector2 mouseOffset;
+        private Vector2Int pieceOffset;
+
         private Vector2Int[] startTiles = null;
         private Vector2Int startPosition;
+        private Vector2Int startPieceOffset;
         private int startRotation;
         private bool startFlip;
 
@@ -50,6 +62,10 @@ namespace PentoPuzzle
         {
             // Cache main camera reference
             mainCamera = Camera.main;
+
+            // Register piece with manager
+            Vector2Int position = Operation.RoundToInt(transform.position);
+            PieceManager.instance.InitializePiece(position, tiles);
         }
 
         // Move to mouse position on drag
@@ -62,9 +78,11 @@ namespace PentoPuzzle
                 offsetSet = true;
                 mouseOffset = (Vector2)transform.position - mousePosition;
                 startTiles = tiles;
+                startPosition = Operation.RoundToInt(transform.position);
+                startPieceOffset = pieceOffset;
+                // Set start rotation and flip
                 startRotation = rotation;
                 startFlip = flip;
-                startPosition = Operation.RoundToInt(transform.position);
             }
             // Rotate and flip
             if (Input.GetKeyDown(KeyCode.R)) rotation += 1;
@@ -83,8 +101,9 @@ namespace PentoPuzzle
 
             // If cannot move piece
             Vector2Int position = Operation.RoundToInt(transform.position);
-            if (!PieceManager.instance.MovePiece(startPosition, startTiles, position, tiles))
+            if (!PieceManager.instance.MovePiece(startPosition + startPieceOffset, startTiles, position + pieceOffset, tiles))
             {
+                pieceOffset = startPieceOffset;
                 // Reset position and tiles
                 transform.position = (Vector2)startPosition;
                 tiles = startTiles;

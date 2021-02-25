@@ -24,6 +24,16 @@ namespace PentoPuzzle
             // GeneratePieces();
         }
 
+        public void InitializePiece(Vector2Int position, Vector2Int[] tiles)
+        {
+            foreach (Vector2Int tile in tiles)
+            {
+                // Set board
+                Vector2Int pos = position + tile;
+                board[pos.x, pos.y] = true;
+            }
+        }
+
         // Generates an initial piece layout
         private void GeneratePieces()
         {
