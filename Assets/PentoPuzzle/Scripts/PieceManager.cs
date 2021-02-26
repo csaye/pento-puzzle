@@ -21,7 +21,7 @@ namespace PentoPuzzle
 
         private void Start()
         {
-            // GeneratePieces();
+            GeneratePieces();
         }
 
         public void InitializePiece(Vector2Int position, Vector2Int[] tiles)
@@ -90,10 +90,10 @@ namespace PentoPuzzle
         // Returns whether piece with given tiles can be moved to given position
         public bool MovePiece(Vector2Int startPosition, Vector2Int[] startTiles, Vector2Int position, Vector2Int[] tiles)
         {
-            Debug.Log($"Start position: {startPosition}");
-            foreach (Vector2Int tile in startTiles) Debug.Log(tile);
-            Debug.Log($"End position: {position}");
-            foreach (Vector2Int tile in tiles) Debug.Log(tile);
+            // Debug.Log($"Start position: {startPosition}");
+            // foreach (Vector2Int tile in startTiles) Debug.Log(tile);
+            // Debug.Log($"End position: {position}");
+            // foreach (Vector2Int tile in tiles) Debug.Log(tile);
 
             foreach (Vector2Int tile in startTiles)
             {

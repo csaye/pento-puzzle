@@ -5,8 +5,6 @@ namespace PentoPuzzle
     public class Piece : MonoBehaviour
     {
         [Header("Attributes")]
-        [SerializeField] private Vector2Int size = new Vector2Int();
-        // [SerializeField] private Vector2 pivot = new Vector2();
         [SerializeField] private bool halfPivot = false;
         [SerializeField] private Vector2Int[] tiles = null;
 
@@ -44,7 +42,7 @@ namespace PentoPuzzle
             {
                 Vector2Int tile = tiles[i];
                 int tileX = tile.y;
-                int tileY = halfPivot ? -tile.x : -tileX - 1;
+                int tileY = halfPivot ? -tile.x : -tile.x - 1;
                 tiles[i] = new Vector2Int(tileX, tileY);
             }
         }
@@ -64,7 +62,7 @@ namespace PentoPuzzle
                 for (int i = 0; i < tiles.Length; i++)
                 {
                     Vector2Int tile = tiles[i];
-                    tiles[i] = new Vector2Int(size.x - tile.x - 1, tile.y);
+                    tiles[i] = new Vector2Int(tile.x * -1, tile.y);
                 }
             }
         }
