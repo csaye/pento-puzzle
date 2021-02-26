@@ -120,8 +120,25 @@ namespace PentoPuzzle
                 board[pos.x, pos.y] = true;
             }
 
-            // Return true
+            // Check for win and return true
+            CheckWin();
             return true;
+        }
+
+        // Checks whether the player has won
+        private void CheckWin()
+        {
+            // For entire board
+            for (int x = boardWidth / 3; x < (2 * boardWidth) / 3; x++)
+            {
+                for (int y = 0; y < boardHeight; y++)
+                {
+                    // If board not filled, return
+                    if (!board[x, y]) return;
+                }
+            }
+
+            Debug.Log("Win");
         }
     }
 }
