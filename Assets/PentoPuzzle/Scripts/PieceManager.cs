@@ -21,7 +21,7 @@ namespace PentoPuzzle
 
         private void Start()
         {
-            // GeneratePieces();
+            GeneratePieces();
         }
 
         public void InitializePiece(Vector2Int position, Vector2Int[] tiles)
@@ -42,13 +42,14 @@ namespace PentoPuzzle
                 for (int y = 0; y < boardHeight; y++)
                 {
                     GameObject piece = pieces[Random.Range(0, pieces.Length)];
-                    Vector2Int[] tiles = piece.GetComponent<Piece>().Tiles;
+                    Piece pieceComponent = piece.GetComponent<Piece>();
+                    Vector2Int[] tiles = pieceComponent.Tiles;
                     Vector2Int position = new Vector2Int(x, y);
                     // If valid piece position
                     if (ValidPiecePosition(position, tiles))
                     {
                         // Instantiate piece
-                        Instantiate(piece, (Vector2)position, Quaternion.identity, transform);
+                        Instantiate(piece, (Vector2)position + pieceComponent.Pivot, Quaternion.identity, transform);
                         // Update board
                         foreach (Vector2Int tile in tiles)
                         {
@@ -91,7 +92,7 @@ namespace PentoPuzzle
             // foreach (Vector2Int tile in startTiles) Debug.Log(tile);
             // Debug.Log($"End position: {position}");
             // foreach (Vector2Int tile in tiles) Debug.Log(tile);
-            
+
             foreach (Vector2Int tile in startTiles)
             {
                 // Clear start position

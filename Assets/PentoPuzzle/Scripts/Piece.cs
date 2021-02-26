@@ -9,6 +9,11 @@ namespace PentoPuzzle
         [SerializeField] private Vector2 pivot = new Vector2();
         [SerializeField] private Vector2Int[] tiles = null;
 
+        public Vector2 Pivot
+        {
+            get { return pivot; }
+        }
+
         public Vector2Int[] Tiles
         {
             get { return tiles; }
@@ -20,11 +25,90 @@ namespace PentoPuzzle
             get { return _rotation; }
             set
             {
-                if (value < 0) _rotation = 3;
+                if (_rotation == value) return;
+                else if (value < 0) _rotation = 3;
                 else _rotation = value;
                 // Rotate
                 int zRot = 90 * rotation;
                 transform.eulerAngles = new Vector3(0, 0, zRot);
+                Rotate();
+            }
+        }
+
+        // Rotates tiles clockwise around pivot
+        private void Rotate()
+        {
+            // Rotate tiles
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                Vector2Int tile = tiles[i];
+
+                // 3x3 blocks
+                if (size.x == 3 && size.y == 3) // 1.5 1.5 pivot
+                {   
+                    if (tile.x == 0 && tile.y == 0) tiles[i] = new Vector2Int(0, 2);
+                    if (tile.x == 1 && tile.y == 0) tiles[i] = new Vector2Int(0, 1);
+                    if (tile.x == 2 && tile.y == 0) tiles[i] = new Vector2Int(0, 0);
+
+                    if (tile.x == 0 && tile.y == 2) tiles[i] = new Vector2Int(2, 2);
+                    if (tile.x == 1 && tile.y == 2) tiles[i] = new Vector2Int(2, 1);
+                    if (tile.x == 2 && tile.y == 2) tiles[i] = new Vector2Int(2, 0);
+
+                    if (tile.x == 0 && tile.y == 1) tiles[i] = new Vector2Int(1, 2);
+                    if (tile.x == 2 && tile.y == 1) tiles[i] = new Vector2Int(1, 0);
+                }
+
+                // 2x4 blocks
+                if (size.x == 2 && size.y == 4) // 1 2 pivot
+                {
+                    if (tile.x == 0 && tile.y == 0) tiles[i] = new Vector2Int(-1, 2);
+                    if (tile.x == 0 && tile.y == 1) tiles[i] = new Vector2Int(0, 2);
+                    if (tile.x == 0 && tile.y == 2) tiles[i] = new Vector2Int(1, 2);
+                    if (tile.x == 0 && tile.y == 3) tiles[i] = new Vector2Int(2, 2);
+
+                    if (tile.x == 1 && tile.y == 0) tiles[i] = new Vector2Int(-1, 1);
+                    if (tile.x == 1 && tile.y == 1) tiles[i] = new Vector2Int(0, 1);
+                    if (tile.x == 1 && tile.y == 2) tiles[i] = new Vector2Int(1, 1);
+                    if (tile.x == 1 && tile.y == 3) tiles[i] = new Vector2Int(2, 1);
+
+                    if (tile.x == -1 && tile.y == 1) tiles[i] = new Vector2Int(0, 3);
+                    if (tile.x == -1 && tile.y == 2) tiles[i] = new Vector2Int(1, 3);
+                    if (tile.x == 2 && tile.y == 1) tiles[i] = new Vector2Int(0, 0);
+                    if (tile.x == 2 && tile.y == 2) tiles[i] = new Vector2Int(1, 0);
+                }
+
+                // 2x3 blocks
+                if (size.x == 2 && size.y == 3) // 1 1 pivot
+                {
+                    if (tile.x == 0 && tile.y == -1) tiles[i] = new Vector2Int(-1, 1);
+                    if (tile.x == 0 && tile.y == 0) tiles[i] = new Vector2Int(0, 1);
+                    if (tile.x == 0 && tile.y == 1) tiles[i] = new Vector2Int(1, 1);
+                    if (tile.x == 0 && tile.y == 2) tiles[i] = new Vector2Int(2, 1);
+
+                    if (tile.x == 1 && tile.y == -1) tiles[i] = new Vector2Int(-1, 0);
+                    if (tile.x == 1 && tile.y == 0) tiles[i] = new Vector2Int(0, 0);
+                    if (tile.x == 1 && tile.y == 1) tiles[i] = new Vector2Int(1, 0);
+                    if (tile.x == 1 && tile.y == 2) tiles[i] = new Vector2Int(2, 0);
+
+                    if (tile.x == -1 && tile.y == 0) tiles[i] = new Vector2Int(0, 2);
+                    if (tile.x == -1 && tile.y == 1) tiles[i] = new Vector2Int(1, 2);
+                    if (tile.x == 2 && tile.y == 0) tiles[i] = new Vector2Int(0, -1);
+                    if (tile.x == 2 && tile.y == 1) tiles[i] = new Vector2Int(1, -1);
+                }
+
+                // 5x1 blocks
+                if (size.x == 1 && size.y == 5) // 0.5 2.5 pivot
+                {
+                    if (tile.x == 0 && tile.y == 0) tiles[i] = new Vector2Int(-2, 2);
+                    if (tile.x == 0 && tile.y == 1) tiles[i] = new Vector2Int(-1, 2);
+                    if (tile.x == 0 && tile.y == 3) tiles[i] = new Vector2Int(1, 2);
+                    if (tile.x == 0 && tile.y == 4) tiles[i] = new Vector2Int(2, 2);
+
+                    if (tile.x == -2 && tile.y == 2) tiles[i] = new Vector2Int(0, 4);
+                    if (tile.x == -1 && tile.y == 2) tiles[i] = new Vector2Int(0, 3);
+                    if (tile.x == 1 && tile.y == 2) tiles[i] = new Vector2Int(0, 1);
+                    if (tile.x == 2 && tile.y == 2) tiles[i] = new Vector2Int(0, 0);
+                }
             }
         }
 
@@ -53,7 +137,7 @@ namespace PentoPuzzle
         private bool offsetSet = false;
         private Vector2 mouseOffset;
 
-        private Vector2Int[] startTiles = null;
+        private Vector2Int[] startTiles = new Vector2Int[5];
         private Vector2 startPosition;
         private int startRotation;
         private bool startFlip;
@@ -77,7 +161,8 @@ namespace PentoPuzzle
             {
                 offsetSet = true;
                 mouseOffset = (Vector2)transform.position - mousePosition;
-                startTiles = (Vector2Int[])tiles.Clone();
+                // Shallow clone tiles
+                for (int i = 0; i < tiles.Length; i++) startTiles[i] = tiles[i];
                 startPosition = transform.position;
                 // Set start rotation and flip
                 startRotation = rotation;
@@ -107,7 +192,8 @@ namespace PentoPuzzle
             {
                 // Reset position and tiles
                 transform.position = startPosition;
-                tiles = startTiles;
+                // Shallow clone tiles
+                for (int i = 0; i < tiles.Length; i++) tiles[i] = startTiles[i];
                 // Reset rotation and flip
                 rotation = startRotation;
                 flip = startFlip;
