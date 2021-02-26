@@ -6,12 +6,13 @@ namespace PentoPuzzle
     {
         [Header("Attributes")]
         [SerializeField] private Vector2Int size = new Vector2Int();
-        [SerializeField] private Vector2 pivot = new Vector2();
+        // [SerializeField] private Vector2 pivot = new Vector2();
+        [SerializeField] private bool halfPivot = false;
         [SerializeField] private Vector2Int[] tiles = null;
 
-        public Vector2 Pivot
+        public bool HalfPivot
         {
-            get { return pivot; }
+            get { return halfPivot; }
         }
 
         public Vector2Int[] Tiles
@@ -42,14 +43,9 @@ namespace PentoPuzzle
             for (int i = 0; i < tiles.Length; i++)
             {
                 Vector2Int tile = tiles[i];
-                // 3x3 blocks, 1.5 1.5 pivot
-                if (size.x == 3 && size.y == 3) tiles[i] = new Vector2Int(tile.y, 2 - tile.x);
-                // 2x4 blocks, 1 2 pivot
-                if (size.x == 2 && size.y == 4) tiles[i] = new Vector2Int(tile.y - 1, 2 - tile.x);
-                // 2x3 blocks, 1 1 pivot
-                if (size.x == 2 && size.y == 3) tiles[i] = new Vector2Int(tile.y, 1 - tile.x);
-                // 5x1 blocks, 0.5 2.5 pivot
-                if (size.x == 1 && size.y == 5) tiles[i] = new Vector2Int(tile.y - 2, 2 - tile.x);
+                int tileX = tile.y;
+                int tileY = halfPivot ? -tile.x : -tileX - 1;
+                tiles[i] = new Vector2Int(tileX, tileY);
             }
         }
 
@@ -89,7 +85,7 @@ namespace PentoPuzzle
             mainCamera = Camera.main;
 
             // Register piece with manager
-            Vector2Int position = Operation.RoundToInt((Vector2)transform.position - pivot);
+            Vector2Int position = halfPivot ? Operation.FloorToInt(transform.position) : Operation.RoundToInt(transform.position);
             PieceManager.instance.InitializePiece(position, tiles);
         }
 
@@ -114,9 +110,9 @@ namespace PentoPuzzle
             if (Input.GetKeyDown(KeyCode.F)) flip = !flip;
             // Round mouse position to snap to grid
             float xRaw = mousePosition.x + mouseOffset.x;
-            float x = (pivot.x % 1 == 0.5f) ? Operation.RoundToHalf(xRaw) : Mathf.Round(xRaw);
+            float x = halfPivot ? Operation.RoundToHalf(xRaw) : Mathf.Round(xRaw);
             float yRaw = mousePosition.y + mouseOffset.y;
-            float y = (pivot.y % 1 == 0.5f) ? Operation.RoundToHalf(yRaw) : Mathf.Round(yRaw);
+            float y = halfPivot ? Operation.RoundToHalf(yRaw) : Mathf.Round(yRaw);
             // Move to rounded mouse position
             transform.position = new Vector2(x, y);
         }
@@ -127,8 +123,8 @@ namespace PentoPuzzle
             offsetSet = false;
 
             // If cannot move piece
-            Vector2Int position = Operation.RoundToInt((Vector2)transform.position - pivot);
-            Vector2Int startPos = Operation.RoundToInt(startPosition - pivot);
+            Vector2Int position = halfPivot ? Operation.FloorToInt(transform.position) : Operation.RoundToInt(transform.position);
+            Vector2Int startPos = halfPivot ? Operation.FloorToInt(startPosition) : Operation.RoundToInt(startPosition);
             if (!PieceManager.instance.MovePiece(startPos, startTiles, position, tiles))
             {
                 // Reset position and tiles

@@ -125,10 +125,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   size: {x: 1, y: 5}
+  halfPivot: 1
   pivot: {x: 0.5, y: 2.5}
+  intPivot: {x: 0, y: 2}
   tiles:
+  - {x: 0, y: -2}
+  - {x: 0, y: -1}
   - {x: 0, y: 0}
   - {x: 0, y: 1}
   - {x: 0, y: 2}
-  - {x: 0, y: 3}
-  - {x: 0, y: 4}

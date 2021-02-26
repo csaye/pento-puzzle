@@ -9,6 +9,13 @@ namespace PentoPuzzle
             return Mathf.Round(f - 0.5f) + 0.5f;
         }
 
+        public static Vector2Int FloorToInt(Vector2 v2)
+        {
+            int x = Mathf.FloorToInt(v2.x);
+            int y = Mathf.FloorToInt(v2.y);
+            return new Vector2Int(x, y);
+        }
+
         public static Vector2Int RoundToInt(Vector2 v2)
         {
             int x = Mathf.RoundToInt(v2.x);
