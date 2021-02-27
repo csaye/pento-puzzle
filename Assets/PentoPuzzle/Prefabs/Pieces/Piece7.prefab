@@ -130,13 +130,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fd4d58d18305490c9ef648248b9487f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 3, y: 3}
   halfPivot: 1
-  pivot: {x: 1.5, y: 1.5}
-  intPivot: {x: 1, y: 1}
   tiles:
   - {x: -1, y: -1}
   - {x: 0, y: -1}
   - {x: 0, y: 0}
   - {x: 1, y: 0}
   - {x: 1, y: 1}
+  spriteRenderer: {fileID: 2311405543445027052}

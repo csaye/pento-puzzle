@@ -7,6 +7,11 @@ namespace PentoPuzzle
         [Header("Attributes")]
         [SerializeField] private bool halfPivot = false;
         [SerializeField] private Vector2Int[] tiles = null;
+        
+        [Header("References")]
+        [SerializeField] private SpriteRenderer spriteRenderer = null;
+
+        private const float scaleFactor = 1.1f;
 
         public bool HalfPivot
         {
@@ -117,6 +122,10 @@ namespace PentoPuzzle
                 // Set start rotation and flip
                 startRotation = rotation;
                 startFlip = flip;
+
+                // Update scale and sorting layer
+                transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+                spriteRenderer.sortingOrder = 1;
             }
 
             // Rotate
@@ -145,6 +154,10 @@ namespace PentoPuzzle
         {
             // Reset mouse offset on mouse up
             offsetSet = false;
+
+            // Update scale and sorting layer
+            transform.localScale = Vector3.one;
+            spriteRenderer.sortingOrder = 0;
 
             // If cannot move piece
             Vector2Int position = halfPivot ? Operation.FloorToInt(transform.position) : Operation.RoundToInt(transform.position);
