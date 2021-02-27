@@ -173,7 +173,8 @@ namespace PentoPuzzle
                 }
             }
 
-            Debug.Log("Win");
+            winText.text = "Win";
+            winText.fontSize = 72;
         }
     }
 }

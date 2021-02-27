@@ -30,12 +30,11 @@ namespace PentoPuzzle
                 // Rotate
                 int zRot = 90 * rotation;
                 transform.eulerAngles = new Vector3(0, 0, zRot);
-                Rotate();
             }
         }
 
         // Rotates tiles clockwise around pivot
-        private void Rotate()
+        private void RotateTiles()
         {
             // Rotate tiles
             for (int i = 0; i < tiles.Length; i++)
@@ -58,11 +57,27 @@ namespace PentoPuzzle
                 // Flip scale
                 int xScale = flip ? -1 : 1;
                 transform.localScale = new Vector3(xScale, 1, 1);
-                // Flip tiles
-                for (int i = 0; i < tiles.Length; i++)
+            }
+        }
+
+        // Flips tiles
+        private void FlipTiles()
+        {
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                Vector2Int tile = tiles[i];
+
+                // Flip horizontally
+                if (rotation == 0 || rotation == 2)
                 {
-                    Vector2Int tile = tiles[i];
-                    tiles[i] = new Vector2Int(tile.x * -1, tile.y);
+                    int tileX = halfPivot ? -tile.x : -(tile.x + 1);
+                    tiles[i] = new Vector2Int(tileX, tile.y);
+                }
+                // Flip vertically
+                else
+                {
+                    int tileY = halfPivot ? -tile.y : -(tile.y + 1);
+                    tiles[i] = new Vector2Int(tile.x, tileY);
                 }
             }
         }
@@ -103,9 +118,20 @@ namespace PentoPuzzle
                 startRotation = rotation;
                 startFlip = flip;
             }
-            // Rotate and flip
-            if (Input.GetKeyDown(KeyCode.R)) rotation -= 1;
-            if (Input.GetKeyDown(KeyCode.F)) flip = !flip;
+
+            // Rotate
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                rotation -= 1;
+                RotateTiles();
+            }
+            // Flip
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                flip = !flip;
+                FlipTiles();
+            }
+
             // Round mouse position to snap to grid
             float xRaw = mousePosition.x + mouseOffset.x;
             float x = halfPivot ? Operation.RoundToHalf(xRaw) : Mathf.Round(xRaw);
