@@ -143,7 +143,6 @@ namespace PentoPuzzle
             }
 
             winText.text = "Win";
-            winText.fontSize = 72;
         }
     }
 }
