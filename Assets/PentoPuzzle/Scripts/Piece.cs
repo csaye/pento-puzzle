@@ -60,8 +60,7 @@ namespace PentoPuzzle
                 if (_flip == value) return;
                 else _flip = value;
                 // Flip scale
-                int xScale = flip ? -1 : 1;
-                transform.localScale = new Vector3(xScale, 1, 1);
+                transform.localScale = new Vector3(-transform.localScale.x, transform.localScale.y, transform.localScale.z);
             }
         }
 
@@ -124,7 +123,7 @@ namespace PentoPuzzle
                 startFlip = flip;
 
                 // Update scale and sorting layer
-                transform.localScale = new Vector3(scaleFactor, scaleFactor, 1);
+                transform.localScale = transform.localScale * scaleFactor;
                 spriteRenderer.sortingOrder = 1;
             }
 
@@ -156,7 +155,7 @@ namespace PentoPuzzle
             offsetSet = false;
 
             // Update scale and sorting layer
-            transform.localScale = Vector3.one;
+            transform.localScale = transform.localScale / scaleFactor;
             spriteRenderer.sortingOrder = 0;
 
             // If cannot move piece
