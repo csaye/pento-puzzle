@@ -9,13 +9,10 @@ namespace PentoPuzzle
         [SerializeField] private GameObject[] pieces = null;
         [SerializeField] private TextMeshProUGUI winText = null;
 
-        [SerializeField] private GameObject pointer = null;
-
         private const int boardWidth = 15;
         private const int boardHeight = 5;
 
         private bool[,] board = new bool[boardWidth, boardHeight];
-        private Pointer[,] pointers = new Pointer[boardWidth, boardHeight];
 
         public static PieceManager instance;
 
@@ -27,31 +24,6 @@ namespace PentoPuzzle
         private void Start()
         {
             GeneratePieces();
-            InitializeBoard();
-            UpdateBoard();
-        }
-
-        private void InitializeBoard()
-        {
-            for (int x = 0; x < boardWidth; x++)
-            {
-                for (int y = 0; y < boardHeight; y++)
-                {
-                    Vector2 position = new Vector2(x + 0.5f, y + 0.5f);
-                    pointers[x, y] = Instantiate(pointer, position, Quaternion.identity, transform).GetComponent<Pointer>();
-                }
-            }
-        }
-
-        private void UpdateBoard()
-        {
-            for (int x = 0; x < boardWidth; x++)
-            {
-                for (int y = 0; y < boardHeight; y++)
-                {
-                    pointers[x, y].SetState(board[x, y]);
-                }
-            }
         }
 
         public void InitializePiece(Vector2Int position, Vector2Int[] tiles)
@@ -62,8 +34,6 @@ namespace PentoPuzzle
                 Vector2Int pos = position + tile;
                 board[pos.x, pos.y] = true;
             }
-            
-            UpdateBoard();
         }
 
         // Generates an initial piece layout
@@ -154,7 +124,6 @@ namespace PentoPuzzle
                 board[pos.x, pos.y] = true;
             }
 
-            UpdateBoard();
             // Check for win and return true
             CheckWin();
             return true;
